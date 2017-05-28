@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -14,8 +15,9 @@ using PowerAssert.MultipleAssertions;
 
 namespace PowerAssertTests.Approvals
 {
-    [TestFixture]
-    public class EndToEndTest
+	[TestFixture]
+	[MultiTargetSupportingApprovalSubdirectoryAttribute("Approvals")]
+	public class EndToEndTest
     {
         static CultureInfo _en = CultureInfo.GetCultureInfo("en");
         CultureInfo _originalUICulture;
