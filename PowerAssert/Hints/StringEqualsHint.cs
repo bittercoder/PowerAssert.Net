@@ -9,7 +9,7 @@ namespace PowerAssert.Hints
 {
     class StringEqualsHint : IHint
     {
-        static readonly MethodInfo[] StringEqualsMethodInfo = typeof (string).GetMethods()
+        static readonly MethodInfo[] StringEqualsMethodInfo = typeof (string).GetRuntimeMethods()
             .Where(x => x.Name == "Equals" && !x.IsStatic && x.GetParameters().First().ParameterType == typeof (string)).ToArray();
 
         static StringComparer GetComparerFromComparison(StringComparison comparison)
@@ -20,11 +20,13 @@ namespace PowerAssert.Hints
                     return StringComparer.CurrentCulture;
                 case StringComparison.CurrentCultureIgnoreCase:
                     return StringComparer.CurrentCultureIgnoreCase;
-                case StringComparison.InvariantCulture:
+#if NET461
+				case StringComparison.InvariantCulture:
                     return StringComparer.InvariantCulture;
                 case StringComparison.InvariantCultureIgnoreCase:
                     return StringComparer.InvariantCultureIgnoreCase;
-                case StringComparison.Ordinal:
+#endif
+				case StringComparison.Ordinal:
                     return StringComparer.Ordinal;
                 case StringComparison.OrdinalIgnoreCase:
                     return StringComparer.OrdinalIgnoreCase;

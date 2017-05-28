@@ -9,7 +9,7 @@ namespace PowerAssert.Hints
     class SequenceEqualHint : IHint
     {
         static readonly MethodInfo SequenceEqualMethodInfo =
-            typeof (Enumerable).GetMethods().Single(x => x.Name == "SequenceEqual" &&
+            typeof (Enumerable).GetRuntimeMethods().Single(x => x.Name == "SequenceEqual" &&
                                                          x.GetParameters().Count() == 2); // TODO: equality comparer support
 
         public bool TryGetHint(ExpressionParser parser, Expression expression, out string hint)

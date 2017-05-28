@@ -76,7 +76,8 @@ namespace PowerAssert.Hints
                 return string.Format(", right string contains control character '{0}' at index {1}", PrintableChar(rightC), index);
             }
 
-            if (char.GetUnicodeCategory(leftC) == UnicodeCategory.Format)
+#if NET461
+			if (char.GetUnicodeCategory(leftC) == UnicodeCategory.Format)
             {
                 return string.Format(", left string contains format character '{0}' at index {1}", PrintableChar(leftC), index);
             }
@@ -85,7 +86,7 @@ namespace PowerAssert.Hints
             {
                 return string.Format(", right string contains format character '{0}' at index {1}", PrintableChar(rightC), index);
             }
-
+			
             if (index + 1 < left.Length)
             {
                 if (CheckIfIsDecomposedVersionOf(left, right, index))
@@ -93,19 +94,21 @@ namespace PowerAssert.Hints
                     return string.Format(", left string contains a decomposed character '{1}' at index {0}", index, char.ConvertFromUtf32(char.ConvertToUtf32(right, index)));
                 }
             }
-
+			
             if (index + 1 < right.Length)
             {
-                if (CheckIfIsDecomposedVersionOf(right, left, index))
+				if (CheckIfIsDecomposedVersionOf(right, left, index))
                 {
                     return string.Format(", right string contains a decomposed character '{1}' at index {0}", index, char.ConvertFromUtf32(char.ConvertToUtf32(left, index)));
                 }
             }
+#endif
 
-            return null;
+			return null;
         }
 
-        static bool CheckIfIsDecomposedVersionOf(string left, string right, int index)
+		#if NET461
+		static bool CheckIfIsDecomposedVersionOf(string left, string right, int index)
         {
             var sb = new StringBuilder();
             sb.Append(left[index]);
@@ -120,7 +123,7 @@ namespace PowerAssert.Hints
 
             var leftDecomposed = sb.ToString();
             var rightComposed = char.ConvertFromUtf32(char.ConvertToUtf32(right, index));
-
+			
             if (leftDecomposed.Normalize() == rightComposed)
             {
                 return true;
@@ -128,6 +131,7 @@ namespace PowerAssert.Hints
 
             return false;
         }
+		#endif
 
         static string PrintableChar(char c)
         {

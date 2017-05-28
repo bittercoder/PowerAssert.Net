@@ -8,7 +8,7 @@ namespace PowerAssert.Hints
 {
     class DelegateShouldHaveBeenInvokedEqualsHint : IHint
     {
-        static readonly MethodInfo ObjectEqualsMethodInfo = typeof (object).GetMethod("Equals", BindingFlags.Static | BindingFlags.Public);
+        static readonly MethodInfo ObjectEqualsMethodInfo = typeof (object).GetRuntimeMethod("Equals", new[] {typeof(object)});
 
         public bool TryGetHint(ExpressionParser parser, Expression expression, out string hint)
         {
@@ -47,7 +47,7 @@ namespace PowerAssert.Hints
             int ix1 = left ? 0 : 1;
             int ix2 = left ? 1 : 0;
 
-            if (typeof (Delegate).IsAssignableFrom(methE.Arguments[ix1].Type))
+            if (typeof (Delegate).GetTypeInfo().IsAssignableFrom(methE.Arguments[ix1].Type.GetTypeInfo()))
             {
                 object leftR;
                 try

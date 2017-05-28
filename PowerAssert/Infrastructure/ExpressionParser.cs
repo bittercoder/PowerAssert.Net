@@ -7,7 +7,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Microsoft.CSharp.RuntimeBinder;
 using PowerAssert.Hints;
 using PowerAssert.Infrastructure.Nodes;
 using System.Diagnostics;
@@ -15,9 +14,10 @@ using System.Diagnostics;
 namespace PowerAssert.Infrastructure
 {
     class ExpressionParser
-    {
-        static Assembly MyAssembly = typeof(ExpressionParser).Assembly;
-
+	{
+#if NET461
+        static Assembly MyAssembly = typeof(ExpressionParser).GetTypeInfo().Assembly;
+#endif
         public Expression RootExpression { get; private set; }
         public Type TestClass { get; private set; }
         public bool TextOnly { get; private set; }
@@ -40,10 +40,14 @@ namespace PowerAssert.Infrastructure
 
         static Type GetTestClass()
         {
-            var st = new StackTrace(1, false);
+#if NET461
+			var st = new StackTrace(1, false);
             return st.GetFrames().Select(f => f.GetMethod().DeclaringType)
                      .FirstOrDefault(t => t != null && t.Assembly != MyAssembly);
-        }
+#else
+	        return null;
+#endif
+		}
 
         public Node Parse()
         {
@@ -56,7 +60,7 @@ namespace PowerAssert.Infrastructure
             {
                 return ParseExpression((dynamic) e);
             }
-            catch (RuntimeBinderException exception)
+            catch (Exception exception)
             {
                 throw new Exception(string.Format("Unable to dispatch expression of type {0} with node type of {1}", e.GetType().Name, e.NodeType), exception);
             }
@@ -167,9 +171,10 @@ namespace PowerAssert.Infrastructure
 
         internal static string NameOfType(Type t)
         {
-            if (t.IsGenericType)
+	        var typeInfo = t.GetTypeInfo();
+            if (typeInfo.IsGenericType)
             {
-                var typeArgs = t.GetGenericArguments().Select(NameOfType).ToList();
+                var typeArgs = typeInfo.GenericTypeArguments.Select(NameOfType).ToList();
                 var name = IsAnonymousType(t) ? "$Anonymous" : t.Name.Split('`')[0];
                 return string.Format("{0}<{1}>", name, string.Join(", ", typeArgs));
             }

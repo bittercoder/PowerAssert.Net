@@ -7,7 +7,7 @@ namespace PowerAssert.MultipleAssertions
 {
     public class Error
     {
-        static Assembly MyAssembly = typeof(Error).Assembly;
+        static Assembly MyAssembly = typeof(Error).GetTypeInfo().Assembly;
 
         internal static readonly string Crlf = Environment.NewLine;
 
@@ -16,7 +16,8 @@ namespace PowerAssert.MultipleAssertions
 
         public Error(string message)
         {
-            Message = message;
+			Message = message;
+#if NET461
             var stackFrames = from f in new StackTrace(1, true).GetFrames()
                 let m = f.GetMethod()
                 where m != null
@@ -34,8 +35,10 @@ namespace PowerAssert.MultipleAssertions
             {
                 Location = "(Unknown location)";
             }
-
-        }
+#else
+			Location = "(Unknown location)";
+#endif
+		}
 
 
         public Error(Exception exception):this(exception.Message)

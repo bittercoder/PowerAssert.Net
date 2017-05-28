@@ -8,7 +8,7 @@ namespace PowerAssert.Hints
 {
     class BrokenEqualityHint : IHint
     {
-        static readonly MethodInfo ObjectEqualsMethodInfo = typeof (object).GetMethod("Equals", BindingFlags.Instance | BindingFlags.Public);
+        static readonly MethodInfo ObjectEqualsMethodInfo = typeof (object).GetRuntimeMethod("Equals", new []{ typeof(object)});
 
         public bool TryGetHint(ExpressionParser parser, Expression expression, out string hint)
         {
@@ -59,7 +59,7 @@ namespace PowerAssert.Hints
         // this can be improved
         static MethodInfo GetDerivedMethodInfo(Type derivedType, MethodInfo baseMethod)
         {
-            return derivedType.GetMethod(baseMethod.Name,
+            return derivedType.GetRuntimeMethod(baseMethod.Name,
                 baseMethod.GetParameters().Select(x => x.ParameterType).ToArray());
         }
     }
