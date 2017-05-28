@@ -8,7 +8,7 @@ namespace PowerAssert.Hints
 {
     class DelegateShouldHaveBeenInvokedEqualsHint : IHint
     {
-        static readonly MethodInfo ObjectEqualsMethodInfo = typeof (object).GetRuntimeMethod("Equals", new[] {typeof(object)});
+        static readonly MethodInfo ObjectEqualsMethodInfo = typeof (object).GetRuntimeMethod("Equals", new[] {typeof(object), typeof(object)});
 
         public bool TryGetHint(ExpressionParser parser, Expression expression, out string hint)
         {

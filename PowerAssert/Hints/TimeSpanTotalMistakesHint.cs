@@ -17,7 +17,7 @@ namespace PowerAssert.Hints
 
         static readonly MethodInfo[] StaticEqualsMethodInfos =
         {
-            typeof (object).GetRuntimeMethod("Equals", new[] {typeof(object)})
+            typeof (object).GetRuntimeMethod("Equals", new[] {typeof(object), typeof(object)})
         };
 
         public bool TryGetHint(ExpressionParser parser, Expression expression, out string hint)
