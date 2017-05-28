@@ -7,7 +7,7 @@ Object.Equals(f, (object)x)
          |    |     |    1
          |    |     1
          |    delegate Func<int>, type: int ()
-         False, but would have been True if you had invoked 'f'
+         False
 
-   at PowerAssert.PAssert.IsTrue(Expression`1 expression) in ...\PAssert.cs
-   at PowerAssertTests.Approvals.EndToEndTest.ApproveException(Expression`1 func) in ...\EndToEndTest.cs
+   at PowerAssert.PAssert.IsTrue(Expression`1 expression)
+   at PowerAssertTests.Approvals.EndToEndTest.ApproveException(Expression`1 func)
